@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2f6f50">
+  <title>小树苗 · 家庭成长账本</title>
+  <link rel="stylesheet" href="styles.css?v=32">
+</head>
+<body>
+  <section class="auth-screen" id="authScreen" aria-label="账号登录与注册">
+    <div class="auth-story">
+      <div class="auth-brand"><span class="brand-mark">芽</span><div><strong>小树苗</strong><small>家庭成长账本</small></div></div>
+      <div><span class="soft-label">陪伴每一次成长</span><h1>把平凡的小事，<br>变成孩子成长的光。</h1><p>记录阅读、家务、学习与进步，让鼓励清楚、温暖，也更有力量。</p></div>
+      <div class="auth-leaves" aria-hidden="true"><span>🌿</span><span>✦</span><span>🌱</span></div>
+    </div>
+    <div class="auth-panel">
+      <div class="auth-box">
+        <p class="eyebrow">欢迎来到小树苗</p><h2 id="authTitle">登录家庭账号</h2><p class="auth-intro" id="authIntro">继续记录孩子今天的每一点进步。</p>
+        <div class="auth-tabs"><button class="active" data-auth-tab="login">登录</button><button data-auth-tab="register">注册账号</button></div>
+        <form id="loginForm" class="auth-form active"><label>邮箱地址<input id="loginUsername" type="email" autocomplete="username" required placeholder="name@example.com"></label><label>密码<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="请输入密码"></label><div class="forgot-row"><button type="button" id="forgotPasswordButton">忘记密码？</button></div><p class="form-error" id="loginError"></p><button class="primary-button full" type="submit">登录</button><button class="demo-button" type="button" id="demoLogin">使用本地体验账号</button></form>
+        <form id="registerForm" class="auth-form"><label>家庭名称<input id="registerFamily" required placeholder="例如：幸福一家"></label><label>邮箱地址<input id="registerUsername" type="email" autocomplete="username" required placeholder="name@example.com"></label><label>设置密码<input id="registerPassword" type="password" autocomplete="new-password" minlength="6" required placeholder="至少 6 位"></label><label>确认密码<input id="registerConfirm" type="password" autocomplete="new-password" minlength="6" required placeholder="再次输入密码"></label><label class="agreement-check"><input id="registerAgreement" type="checkbox" required><span>我确认自己是孩子的家长或监护人，并已阅读同意 <a class="legal-link" href="terms.html" target="_blank" rel="noopener">《用户协议》</a> 和 <a class="legal-link" href="privacy.html" target="_blank" rel="noopener">《隐私政策》</a></span></label><div class="signup-code" id="signupCodeSection"><label>邮箱验证码<div class="code-input-row"><input id="registerCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" minlength="6" placeholder="输入邮件中的 6 位验证码"><button type="button" id="sendSignupCode">发送验证码</button></div><small class="code-help">未收到时请检查垃圾邮件；验证码为 6 位数字。</small></label></div><p class="form-error" id="registerError"></p><button class="primary-button full" type="submit" id="verifySignupCode">验证邮箱并完成注册</button></form>
+      </div>
+    </div>
+  </section>
+
+  <div class="leaf leaf-a" aria-hidden="true"></div>
+  <div class="leaf leaf-b" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="主导航">
+      <a class="brand" href="#" data-nav="dashboard" aria-label="返回首页">
+        <span class="brand-mark" aria-hidden="true">芽</span>
+        <span><strong>小树苗</strong><small>家庭成长账本</small></span>
+      </a>
+
+      <nav class="side-nav">
+        <button class="nav-item active" data-nav="dashboard"><span>⌂</span>首页</button>
+        <button class="nav-item" data-nav="records"><span>▤</span>每日记录</button>
+        <button class="nav-item" data-nav="study"><span>⌁</span>学习中心</button>
+        <button class="nav-item" data-nav="gallery"><span>▧</span>成长相册</button>
+        <button class="nav-item" data-nav="circle"><span>◉</span>孩子圈</button>
+        <button class="nav-item" data-nav="analytics"><span>⌇</span>数据分析</button>
+        <button class="nav-item" data-nav="settings"><span>⚙</span>家庭设置</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button class="family-card" id="familyCardButton" type="button" title="切换家庭">
+          <div class="avatar-stack"><span>林</span><span>周</span></div>
+          <div><strong>幸福一家</strong><small>2 位家长共同管理</small></div>
+        </button>
+        <button class="mode-switch" id="modeSwitch"><span>☀</span>进入孩子模式</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="todayText"></p>
+          <h1 id="pageTitle">早上好，今天也一起成长</h1>
+        </div>
+        <div class="top-actions">
+          <button class="family-switch-button hidden" id="familySwitcherButton" type="button" title="切换家庭"><span>⌂</span><b id="headerFamilyName">我的家庭</b><i>⌄</i></button>
+          <button class="support-button" id="donateButton" type="button" title="打赏作者"><span>♡</span><b>打赏作者</b></button>
+          <button class="icon-button" id="notificationButton" type="button" aria-label="打开消息提醒" title="消息提醒">♢<span class="dot"></span></button>
+          <button class="profile-button" id="profileButton"><span class="profile-avatar" id="headerAvatar">林</span><span>林妈妈<small>家长账户</small></span><span class="header-level-progress" id="headerLevelProgress" tabindex="0" aria-describedby="levelRuleTooltip"><i class="profile-level" id="headerLevel">Lv.1</i><span class="header-exp-track"><i id="headerExpBar"></i></span><small id="headerExpRemaining">还差 100</small><span class="level-rule-tooltip" id="levelRuleTooltip" role="tooltip">每日首次登录获得 10 经验；每累计 100 经验提升 1 级；切换家庭不会重置经验。</span></span><b>⌄</b></button>
+        </div>
+      </header>
+
+      <button class="child-back hidden" id="childBack">← 返回孩子首页</button>
+
+      <section class="view active" id="dashboardView">
+        <div class="child-picker-wrap">
+          <div class="section-heading compact">
+            <div><p class="eyebrow">我的孩子</p><h2>今天想记录谁的成长？</h2></div>
+            <div class="child-picker-actions"><button class="text-button" id="compareChildrenButton" type="button">⇄ 所有孩子对比</button><button class="text-button" id="addChildButton">＋ 添加孩子</button></div>
+          </div>
+          <div class="child-picker" id="childPicker"></div>
+        </div>
+
+        <section class="children-comparison hidden" id="childrenComparisonPanel" aria-live="polite">
+          <div class="section-heading"><div><p class="eyebrow">家庭对比</p><h2>所有孩子的成长数据</h2><p>同一口径查看积分、奖励和记录数量，帮助家长了解每个孩子的成长节奏。</p></div><button class="secondary-button" id="closeChildrenComparison" type="button">收起对比</button></div>
+          <div class="children-comparison-grid" id="childrenComparisonGrid"></div>
+        </section>
+
+        <section class="stats-section">
+          <div class="section-heading"><div><p class="eyebrow">本月概览</p><h2>看得见的点滴进步</h2></div><div class="stats-heading-actions"><button class="text-button" id="manageMetrics">自定义展示</button><button class="text-button" data-nav="analytics">查看分析 ›</button></div></div>
+          <div class="stat-grid" id="statGrid"></div>
+        </section>
+
+        <section class="quick-section">
+          <div class="section-heading"><div><p class="eyebrow">快捷记录</p><h2>刚刚完成了什么？</h2></div><div class="quick-heading-actions"><button class="text-button" id="manageQuickDisplay" type="button">☷ 修改显示</button><button class="text-button" id="manageQuick" type="button">＋ 添加快捷项</button></div></div>
+          <div class="quick-grid" id="quickGrid"></div>
+        </section>
+
+        <div class="dashboard-columns hidden" aria-hidden="true">
+          <section class="content-card">
+            <div class="card-heading"><div><p class="eyebrow">今日记录</p><h2>成长时间线</h2></div><span class="count-badge" id="todayCount">4 项</span></div>
+            <div class="timeline" id="dashboardTimeline"></div>
+          </section>
+
+          <section class="content-card review-card">
+            <div class="card-heading"><div><p class="eyebrow">学习提醒</p><h2>今日单词复习</h2></div><span class="alert-badge">待完成</span></div>
+            <div class="review-progress"><div><strong id="reviewProgressText">9 / 12</strong><small>已通过</small></div><div class="progress-track"><span id="reviewProgressBar" style="width:75%"></span></div></div>
+            <div class="word-preview" id="wordPreview"></div>
+            <button class="primary-button full" data-nav="study">去完成复习</button>
+            <p class="lock-note">🔒 完成到期复习后，才能学习新单词</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="recordsView">
+        <div class="page-heading"><div><p class="eyebrow">每日记录</p><h2><span data-current-child>小满</span>的成长日历</h2><p>学习、家务、奖励与消费，都按天清楚记录。</p></div><div class="page-heading-actions"><label class="context-child-switch">查看孩子<select id="recordsChildSelect" data-active-child-select aria-label="切换每日记录的孩子"></select></label><button class="primary-button" data-open-record>＋ 新增记录</button></div></div>
+        <div class="filter-bar">
+          <label>月份<input type="month" id="recordsMonth"></label>
+          <label>记录类型<select id="recordTypeFilter"><option value="all">全部类型</option><option>看书</option><option>练字</option><option>背单词</option><option>课程学习</option><option>幼小衔接</option><option>家务</option><option>处罚</option><option>消费</option><option>结算</option></select></label>
+          <button class="secondary-button" id="exportButton">⇩ 导出 Excel</button>
+        </div>
+        <div class="record-layout">
+          <div class="calendar-card">
+            <div class="calendar-header"><button id="prevMonth" aria-label="上个月">‹</button><strong id="calendarTitle"></strong><button id="nextMonth" aria-label="下个月">›</button></div>
+            <div class="week-row"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+            <div class="calendar-legend"><span><i class="good-dot"></i>有成长记录</span><span><i class="bad-dot"></i>有处罚记录</span></div>
+          </div>
+          <div class="content-card daily-detail">
+            <div class="card-heading"><div><p class="eyebrow" id="selectedDateLabel">今天</p><h2>当天记录明细</h2><small class="parent-management-note">家长管理：每条记录都可修改或删除，金额与积分会自动重新计算。</small></div><div class="day-net"><small>当日净金额</small><strong id="dayTotal">¥0</strong></div></div>
+            <div class="day-summary-grid" aria-label="当日数据汇总">
+              <span><small>好孩子分</small><strong id="dayGoodPoints">+0</strong></span>
+              <span><small>不乖分</small><strong id="dayBadPoints">+0</strong></span>
+              <span><small>奖励金额</small><strong id="dayRewardTotal">¥0</strong></span>
+              <span><small>处罚金额</small><strong id="dayPenaltyTotal">¥0</strong></span>
+            </div>
+            <div class="timeline daily-record-list" id="recordsTimeline"></div>
+            <div class="list-pagination" id="recordsPagination"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="studyView">
+        <div class="page-heading"><div><p class="eyebrow">学习中心</p><h2><span data-current-child>小满</span>的学习中心</h2><p>选择学段、年级和学科，在国家中小学智慧教育平台学习并记录专注时光。</p></div><div class="page-heading-actions"><label class="context-child-switch">查看孩子<select id="studyChildSelect" data-active-child-select aria-label="切换学习中心的孩子"></select></label><div class="study-streak">🔥 连续学习 <strong id="studyStreakCount">0</strong> 天</div></div></div>
+        <div class="study-tabs"><button class="active" data-study-tab="review">背诵与复习 <span id="reviewTabCount">0</span></button><button data-study-tab="new">学习新词</button><button data-study-tab="bridge">幼小衔接</button><button data-study-tab="courses">同步课程</button><button data-study-tab="reading">阅读计时</button></div>
+
+        <div class="study-panel active" id="reviewPanel">
+          <div class="word-onboarding" id="wordOnboarding"></div>
+          <div class="study-card standard-review">
+            <div class="study-card-top"><span class="soft-label">第 4 天复习</span><span id="reviewCounter">1 / 3</span></div>
+            <div class="word-card-content"><p class="phonetic" id="wordPhonetic">/ˈhæp.i/</p><h2 id="studyWord">happy</h2><p id="wordMeaning">adj. 快乐的；幸福的</p><button class="sound-button" id="soundButton">◖ 播放发音</button></div>
+            <div class="answer-area" id="answerArea"><p>让孩子说出中文含义，家长完成考核。</p><div><button class="fail-button" id="failWord">还需复习</button><button class="pass-button" id="passWord">✓ 已通过</button></div></div>
+          </div>
+          <aside class="study-side content-card standard-review"><h3>今日进度</h3><div class="ring" id="studyRing"><span>0<small>/ 3</small></span></div><p>全部通过后，将解锁新单词学习。</p><div class="mini-word-list" id="miniWordList"></div></aside>
+        </div>
+
+        <div class="study-panel" id="newPanel">
+          <div class="locked-state" id="newWordLocked"><span>🔒</span><h2>新单词暂未解锁</h2><p>请先通过今天所有待复习单词，养成扎实复习的好习惯。</p><button class="primary-button" data-study-tab-trigger="review">返回复习</button></div>
+          <div class="new-word-state hidden" id="newWordReady"><span class="success-illustration">✦</span><h2>现在可以学习新单词</h2><p>当前没有到期复习，可以继续选择并背诵新词。</p><label>选择词库<select id="wordLibrary"><option>小学三年级上册</option><option>小学三年级下册</option><option>小学四年级上册</option><option>小学四年级下册</option><option>小学五年级上册</option><option>小学五年级下册</option><option>初中核心词汇</option><option>高中核心词汇</option></select></label><button class="primary-button" id="learnNewWord">开始学习</button></div>
+        </div>
+
+        <div class="study-panel" id="bridgePanel">
+          <div class="bridge-learning-layout">
+            <section class="content-card bridge-picker-card">
+              <div class="card-heading"><div><p class="eyebrow">入学准备</p><h2>幼小衔接能力练习</h2><p>从拼音、识字、数感、逻辑和生活常识开始，每次练习一点点。</p></div><span class="official-chip">5 类能力</span></div>
+              <div class="bridge-activity-grid" id="bridgeActivityGrid"></div>
+            </section>
+            <section class="content-card bridge-exercise-card">
+              <div class="bridge-exercise-head"><span id="bridgeActivityIcon">音</span><div><small>当前练习</small><h2 id="bridgeActivityTitle">拼音启蒙</h2></div></div>
+              <div class="bridge-question" id="bridgeQuestion">请选择一个练习项目开始。</div>
+              <div class="bridge-options" id="bridgeOptions"></div>
+              <p class="bridge-feedback" id="bridgeFeedback">答题后会立即显示结果。</p>
+              <button class="secondary-button" id="bridgeNextQuestion" type="button">换一道题</button>
+            </section>
+          </div>
+          <section class="content-card bridge-timer-card">
+            <div><p class="eyebrow">专注计时</p><h2 id="bridgeTimerTitle">幼小衔接学习</h2><p>从零开始计时，可以暂停；终止后保存开始、结束和总时长。</p><div class="course-live-meta" id="bridgeLiveMeta">尚未开始本次学习</div></div>
+            <div class="bridge-timer-control"><strong class="course-timer-display" id="bridgeTimerDisplay">00:00:00</strong><div class="course-timer-actions"><button class="primary-button" id="bridgeTimerButton" type="button">开始计时</button><button class="secondary-button" id="finishBridgeSession" type="button" disabled>终止并记录</button></div></div>
+          </section>
+          <section class="content-card bridge-history-card"><div class="card-heading"><div><p class="eyebrow">学习记录</p><h2>幼小衔接学习时长</h2><p>终止计时后自动记录，家长可以修改或删除。</p></div><span class="count-badge" id="bridgeSessionCount">0 次</span></div><div class="course-session-list" id="bridgeSessionList"></div><div class="list-pagination" id="bridgeSessionPagination"></div></section>
+        </div>
+
+        <div class="study-panel" id="coursesPanel">
+          <div class="course-learning-layout">
+            <section class="content-card course-picker-card">
+              <div class="card-heading"><div><p class="eyebrow">国家课程</p><h2>今天想学什么？</h2></div><span class="official-chip">国家平台</span></div>
+              <div class="course-selectors"><label>学段<select id="courseStage"><option value="primary">小学</option><option value="junior">初中</option></select></label><label>年级<select id="courseGrade"></select></label></div>
+              <div class="subject-picker" aria-label="选择学习科目"><button class="active" data-course-subject="语文"><span>语</span><strong>语文</strong><small>阅读与表达</small></button><button data-course-subject="数学"><span>数</span><strong>数学</strong><small>思维与计算</small></button><button data-course-subject="英语"><span>英</span><strong>英语</strong><small>听说与词汇</small></button></div>
+              <div class="platform-entry"><div><strong>国家中小学智慧教育平台</strong><small>将在新窗口打开，请在平台内选择对应教材和课程。</small></div><a class="primary-button" id="smartEduLink" href="https://basic.smartedu.cn/" target="_blank" rel="noopener noreferrer">进入官方平台 ↗</a></div>
+            </section>
+            <section class="course-timer-card">
+              <span class="soft-label">学习计时</span><h2 id="courseSessionTitle">三年级 · 语文</h2><p>打开课程后开始计时，结束时提交给家长确认。</p><div class="course-live-meta" id="courseLiveMeta">尚未开始本次学习</div><div class="course-timer-display" id="courseTimerDisplay">00:00:00</div><div class="course-reward-preview" id="courseRewardPreview">每小时奖励 ¥1 和 1 个好孩子分</div><div class="course-timer-actions"><button class="primary-button" id="courseTimerButton">开始计时</button><button class="secondary-button" id="finishCourseSession" disabled>结束并提交</button></div><small>奖励按实际学习分钟折算；家长可在“家庭设置 → 奖罚规则”中修改每小时金额和积分。</small>
+            </section>
+          </div>
+          <section class="content-card course-history-card"><div class="card-heading"><div><p class="eyebrow">学习记录</p><h2>同步课程学习时间</h2></div><span class="count-badge" id="courseSessionCount">0 次</span></div><div class="course-session-list" id="courseSessionList"></div><div class="list-pagination" id="courseSessionPagination"></div></section>
+        </div>
+
+        <div class="study-panel" id="readingPanel">
+          <section class="content-card classic-library-card">
+            <div class="card-heading"><div><p class="eyebrow">阅读中心</p><h2>选择正在阅读的书</h2><p>四大名著可阅读全文；其他课外书也可以单独计时并保存阅读记录。</p></div><div class="reading-source-switch" aria-label="选择阅读对象"><button class="active" data-reading-source="classic">四大名著</button><button data-reading-source="other">其他课外书</button></div></div>
+            <div class="reading-other-book-form" id="otherBookForm" hidden><label>正在阅读的课外书<input type="text" id="otherBookTitle" maxlength="60" placeholder="例如：十万个为什么" autocomplete="off"></label><small>填写书名后即可从零开始计时；结束时会记录书名、开始时间、结束时间与阅读时长。</small></div>
+            <div class="classic-book-grid" id="classicBookGrid"></div>
+          </section>
+          <section class="reading-timer-card">
+            <span class="soft-label">阅读计时</span><h2 id="readingSessionTitle">《西游记》· 原著全文</h2><p>计时从零开始，可随时暂停；终止后会保存开始、结束和阅读时长。</p><div class="course-live-meta" id="readingLiveMeta">尚未开始本次阅读</div><div class="timer-display" id="timerDisplay">00:00:00</div><div class="reading-reward-preview" id="readingRewardPreview">每满 1 小时，家长可选择按看书规则发放奖励。</div><div class="reading-timer-actions"><button class="primary-button" id="timerButton">开始计时</button><button class="secondary-button" id="finishReadingSession" disabled>终止并记录</button></div><p>记录提交给家长确认后，才计入看书奖励和好孩子分。</p>
+          </section>
+          <section class="content-card reading-history-card"><div class="card-heading"><div><p class="eyebrow">阅读记录</p><h2>翻阅阅读时长</h2><p>每满 1 小时获得 1 次可发放额度；家长可发放、确认不发放、取消发放或编辑删除记录。</p></div><span class="count-badge" id="readingSessionCount">0 次</span></div><div class="course-session-list" id="readingSessionList"></div><div class="list-pagination" id="readingSessionPagination"></div></section>
+        </div>
+      </section>
+
+      <section class="view" id="galleryView">
+        <div class="page-heading"><div><p class="eyebrow">成长相册</p><h2><span data-current-child>小满</span>的成长点滴</h2><p>把值得记住的照片和故事，收藏在时间里。</p></div><div class="page-heading-actions"><label class="context-child-switch">查看孩子<select id="galleryChildSelect" data-active-child-select aria-label="切换成长相册的孩子"></select></label><button class="primary-button" id="uploadPhotoButton">＋ 上传照片</button></div></div>
+        <section class="gallery-quota-card" id="galleryQuotaCard"><div><div class="quota-heading"><span id="galleryPlanBadge">免费空间</span><strong id="galleryQuotaText">0 / 10 条 · 0 MB / 50 MB</strong></div><div class="quota-progress"><i id="galleryQuotaBar"></i></div><small id="galleryQuotaHint">达到10条或50MB中的任一上限后，需要充值扩容。</small></div><button class="secondary-button" id="galleryUpgradeButton">选择充值方案</button></section>
+        <div class="filter-bar"><label>查看月份<input type="month" id="galleryMonth"></label><label>照片分类<select id="galleryCategory"><option value="all">全部分类</option><option>学习</option><option>生活</option><option>家务</option><option>纪念日</option><option>其他</option></select></label></div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+        <div class="list-pagination" id="galleryPagination"></div>
+      </section>
+
+      <section class="view" id="circleView">
+        <div class="page-heading"><div><p class="eyebrow">孩子圈</p><h2>分享孩子的闪光时刻</h2><p>发布图片与文字，所有注册用户都可以查看，一起见证成长。</p></div><span class="circle-privacy">所有注册用户可见</span></div>
+        <div class="circle-layout">
+          <aside class="circle-me-card"><div class="circle-me-avatar" id="circleMyAvatar">家</div><div><strong id="circleMyNickname">家长</strong><span id="circleMyLevel">Lv.1</span><small id="circleMyExp">0 / 100 经验</small></div></aside>
+          <div class="circle-main">
+            <form class="circle-composer" id="circlePostForm">
+              <div class="circle-composer-head"><div><strong>记录这一刻</strong><small id="circleCloudStatus">正在连接孩子圈…</small></div><div class="circle-composer-options"><label>关联孩子<select id="circleChild"></select></label><label>谁可以看<select id="circleVisibility"><option value="public">所有注册用户</option><option value="family">仅家庭内部</option></select></label></div></div>
+              <textarea id="circleContent" maxlength="500" rows="4" placeholder="写下孩子今天值得纪念的一件事……"></textarea>
+              <div class="circle-image-preview" id="circleImagePreview"></div>
+              <div class="circle-composer-actions"><label class="secondary-button circle-file-button">▧ 添加照片<input type="file" id="circleImage" accept="image/jpeg,image/png,image/webp"></label><button class="primary-button" type="submit" id="publishCirclePost">发布到孩子圈</button></div>
+            </form>
+            <div class="circle-feed" id="circleFeed"></div>
+            <div class="list-pagination" id="circlePagination"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="analyticsView">
+        <div class="page-heading"><div><p class="eyebrow">数据分析</p><h2><span data-current-child>小满</span>的成长趋势</h2><p>用温和的数据，看见长期坚持带来的变化。</p></div><button class="secondary-button" id="analysisExport">⇩ 导出数据</button></div>
+        <div class="filter-bar"><label>查看孩子<select id="analyticsChildSelect" data-active-child-select aria-label="切换数据分析的孩子"></select></label><label>开始日期<input type="date" id="startDate"></label><label>结束日期<input type="date" id="endDate"></label><div class="range-buttons"><button data-range="7">近7天</button><button class="active" data-range="30">近30天</button><button data-range="90">近90天</button></div></div>
+        <div class="analytics-grid" id="analyticsStats"></div>
+        <div class="chart-grid">
+          <section class="content-card chart-card"><div class="card-heading"><div><p class="eyebrow">积分趋势</p><h2>好孩子分与不乖分</h2></div><div class="chart-legend"><span class="legend-good">● 好孩子分</span><span class="legend-bad">● 不乖分</span></div></div><svg id="scoreChart" viewBox="0 0 680 260" role="img" aria-label="最近四周好孩子分和不乖分柱状图"></svg></section>
+          <section class="content-card chart-card"><div class="card-heading"><div><p class="eyebrow">活动分布</p><h2>本月完成事项</h2></div></div><div class="donut-wrap"><div class="donut-chart" id="activityDonut" aria-label="本月活动分布图"><span id="activityTotal">0<small>总次数</small></span></div><div class="activity-legend"><span><i class="a"></i>背单词 <b id="activityWords">0</b></span><span><i class="b"></i>看书 <b id="activityReading">0</b></span><span><i class="c"></i>家务 <b id="activityChores">0</b></span><span><i class="d"></i>练字 <b id="activityWriting">0</b></span></div></div></section>
+        </div>
+        <section class="content-card chart-card"><div class="card-heading"><div><p class="eyebrow">金额变化</p><h2>奖励、消费与处罚</h2></div></div><svg id="moneyChart" viewBox="0 0 1080 260" role="img" aria-label="最近六周奖励消费和处罚金额趋势图"></svg></section>
+      </section>
+
+      <section class="view" id="settingsView">
+        <div class="page-heading"><div><p class="eyebrow">家庭设置</p><h2>按你们家的方式共同成长</h2><p>奖励金额和积分规则都可以灵活调整。</p></div><button class="lock-button" id="manualLock">🔓 修改已解锁</button></div>
+        <div class="settings-layout">
+          <nav class="settings-nav"><button data-setting="account">账户信息</button><button class="active" data-setting="rules">奖罚规则</button><button data-setting="balance">账户与结算</button><button data-setting="family">家庭成员</button><button data-setting="security">安全与权限</button><button data-setting="audit">操作记录</button></nav>
+          <div class="settings-content">
+            <section class="setting-panel" id="accountSetting"><div class="card-heading"><div><p class="eyebrow">我的账户</p><h2>账户信息与成长等级</h2></div><span class="level-chip" id="accountLevelChip">Lv.1</span></div><div class="account-profile-layout"><div class="account-avatar-editor"><button type="button" id="accountAvatarButton"><span id="accountAvatarPreview">家</span><i>更换头像</i></button><input type="file" id="accountAvatarFile" accept="image/jpeg,image/png,image/webp" hidden><p>头像会显示在孩子圈和账户入口。</p></div><form id="accountProfileForm" class="account-profile-form"><label>昵称<input id="accountNickname" required maxlength="24" placeholder="请输入昵称"></label><label>登录邮箱<input id="accountEmail" type="email" readonly></label><label>家庭名称<input id="accountFamilyName" maxlength="30" placeholder="例如：幸福一家"></label><div class="level-progress-card"><div><strong id="accountExpText">0 经验</strong><span>每日首次登录 +10 经验，每 100 经验升一级</span></div><div class="level-progress-track"><i id="accountExpBar"></i></div></div><button class="primary-button" type="submit">保存账户信息</button></form></div></section>
+            <section class="setting-panel active" id="rulesSetting"><div class="card-heading"><div><p class="eyebrow">自定义规则</p><h2>奖励与积分项目</h2></div><button class="secondary-button" id="addRuleButton">＋ 添加项目</button></div><div class="rule-table" id="ruleTable"></div></section>
+            <section class="setting-panel" id="balanceSetting"><div class="card-heading"><div><p class="eyebrow">独立账户</p><h2><span data-current-child>小满</span>的账户与结算</h2></div><label class="context-child-switch">查看孩子<select id="balanceChildSelect" data-active-child-select aria-label="切换账户与结算的孩子"></select></label></div><div class="balance-setting-grid"><article><label class="account-name-field">账户名称<input id="pendingAccountName" maxlength="12" value="未发放金额"></label><strong id="balancePending">¥88</strong><p>奖励结算后自动减少，允许为负数。</p><button class="secondary-button" id="settleReward">记录奖励发放</button></article><article><label class="account-name-field">账户名称<input id="redpacketAccountName" maxlength="12" value="红包钱"></label><strong id="balanceRed">-¥12.5</strong><p>处罚时可选择从此账户扣除；家长也可直接调整。</p><button class="secondary-button" id="adjustRedpacket">更改红包</button></article></div></section>
+            <section class="setting-panel" id="familySetting"><div class="card-heading"><div><p class="eyebrow">共同管理</p><h2>家庭成员</h2></div></div><div class="member-list" id="familyMemberList"></div><p class="family-cloud-warning hidden" id="familyCloudWarning"></p><button class="secondary-button" id="inviteParentButton">＋ 邀请家长</button></section>
+            <section class="setting-panel" id="securitySetting"><div class="card-heading"><div><p class="eyebrow">账户保护</p><h2>安全与权限</h2></div></div><div class="setting-row"><div><strong>登录密码</strong><small>定期更换密码，保护家庭资料与孩子成长记录</small></div><button class="secondary-button" id="changePasswordButton">修改密码</button></div><div class="setting-row"><div><strong>修改操作二次验证</strong><small>修改数据前使用登录密码解锁，解锁后 1 小时有效</small></div><label class="switch"><input type="checkbox" checked><span></span></label></div><div class="setting-row"><div><strong>浏览器通知</strong><small>单词复习到期与待确认记录提醒</small></div><button class="secondary-button" id="settingsNotify">开启通知</button></div><div class="setting-row"><div><strong>孩子模式保护</strong><small>返回家长模式时必须验证登录密码</small></div><span class="status-ok">已开启</span></div><div class="setting-row"><div><strong>退出当前账号</strong><small>本机数据仍会保留，下次登录后可继续使用</small></div><button class="secondary-button" id="logoutButton">退出登录</button></div></section>
+            <section class="setting-panel" id="auditSetting"><div class="card-heading"><div><p class="eyebrow">操作留痕</p><h2>最近操作记录</h2></div></div><div class="audit-list" id="auditList"></div><div class="list-pagination" id="auditPagination"></div></section>
+          </div>
+        </div>
+      </section>
+
+      <section class="child-mode-view" id="childModeView">
+        <header class="child-header"><div><span class="child-logo">芽</span><div><small>小树苗 · 孩子模式</small><strong>嗨，<span id="childModeName">小满</span>！</strong></div></div><div class="child-header-actions"><button id="childLogout" type="button">退出登录</button><button id="exitChildMode" type="button">家长入口 🔒</button></div></header><section class="child-mode-switcher" id="childModeSwitcher"><small>选择正在使用的孩子</small><div id="childModePicker" aria-label="切换孩子"></div></section>
+        <div class="child-welcome"><div><span>今天也要认真一点点</span><h1>先完成复习，再去认识新单词吧！</h1><p>你已经连续学习 <strong id="childModeStreak">0</strong> 天了，继续加油。</p></div><div class="child-tree">🌳<span>⭐</span></div></div>
+        <div class="child-task-grid"><button data-child-action="review"><span>🔤</span><strong>复习单词</strong><small>还有 <b id="childModeReviewCount">0</b> 个待通过</small><b>开始复习 →</b></button><button data-child-action="courses"><span>🎓</span><strong>同步课程</strong><small>语文、数学、英语在线学习</small><b>选择课程 →</b></button><button data-child-action="reading"><span>📖</span><strong>阅读计时</strong><small>选好时间，安静读书</small><b>开始阅读 →</b></button><button data-child-action="records"><span>🌟</span><strong>我的成长</strong><small>今天获得 <b id="childModeTodayPoints">0</b> 分</small><b>看看记录 →</b></button></div>
+        <div class="child-score"><div><small>我的好孩子分</small><strong id="childModeScore">0</strong><span>本月 +<b id="childModeMonthPoints">0</b></span></div><div class="seedling-progress"><span class="plant p1">🌱</span><span class="plant p2">🌿</span><span class="plant p3">🌳</span><i id="childModeProgress" style="width:0%"></i></div><p id="childModeProgressText">再获得 100 分，小树苗就会长成大树！</p></div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="移动端导航">
+    <button class="active" data-nav="dashboard"><span>⌂</span>首页</button><button data-nav="records"><span>▤</span>记录</button><button class="mobile-add" data-nav="gallery" aria-label="进入成长相册" title="成长相册"><span>▧</span></button><button data-nav="study"><span>⌁</span>学习</button><button id="mobileMoreButton" type="button"><span>•••</span>更多</button>
+  </nav>
+
+  <div class="modal-backdrop" id="recordModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="recordModalTitle">
+      <div class="modal-head"><div><p class="eyebrow">每日记录</p><h2 id="recordModalTitle">记录一件小事</h2></div><button class="modal-close" data-close-modal aria-label="关闭">×</button></div>
+      <div class="type-pills" id="typePills"><button class="active" data-type="看书">看书</button><button data-type="练字">练字</button><button data-type="家务">家务</button><button data-type="处罚">处罚</button><button data-type="消费">消费</button><button data-type="结算">发放</button></div>
+      <form id="recordForm">
+        <div class="form-grid">
+          <label>孩子<select id="recordChild"></select></label>
+          <label>日期<input type="date" id="recordDate" required></label>
+          <label class="full-field">内容<input type="text" id="recordContent" value="看书" placeholder="例如：《夏洛的网》" required></label>
+          <label id="pagesField">总页数<input type="number" id="recordPages" min="1" value="1"></label>
+          <label>金额（元）<input type="number" id="recordAmount" step="0.1" value="2" required></label>
+          <label id="accountField">扣款账户<select id="recordAccount"><option value="pending">未发放金额</option><option value="redpacket">红包钱</option></select></label>
+          <label>积分<input type="number" id="recordPoints" value="1"></label>
+          <label class="full-field">备注<textarea id="recordNote" rows="2" placeholder="选填"></textarea></label>
+        </div>
+        <div class="modal-note" id="modalNote">确认后奖励 ¥2，并增加 1 个好孩子分。</div>
+        <div class="modal-actions"><button type="button" class="secondary-button" data-close-modal>取消</button><button type="submit" class="primary-button">确认记录</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="passwordModal" aria-hidden="true">
+    <div class="modal small-modal" role="dialog" aria-modal="true" aria-labelledby="passwordTitle">
+      <div class="modal-head"><div><p class="eyebrow">家长验证</p><h2 id="passwordTitle">返回家长模式</h2></div><button class="modal-close" data-close-password aria-label="关闭">×</button></div>
+      <p>请输入登录密码，防止孩子进入管理界面。</p>
+      <form id="passwordForm"><label>登录密码<input type="password" id="parentPassword" placeholder="请输入当前账号密码" required></label><p class="form-error" id="passwordError"></p><div class="modal-actions"><button type="button" class="secondary-button" data-close-password>取消</button><button type="submit" class="primary-button">验证并返回</button></div></form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="photoModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle">
+      <div class="modal-head"><div><p class="eyebrow">成长相册</p><h2 id="photoModalTitle">收藏成长点滴</h2></div><button class="modal-close" data-close-photo aria-label="关闭">×</button></div>
+      <form id="photoForm"><div class="photo-upload-zone"><input type="file" id="photoFile" accept="image/jpeg,image/png,image/webp" required><div id="photoPreview"><span>▧</span><strong>选择一张照片</strong><small>支持 JPG、PNG、WebP，系统会自动压缩保存</small></div></div><p class="photo-quota-note" id="photoQuotaNote">免费相册最多10条或50MB。</p><div class="form-grid"><label>日期<input type="date" id="photoDate" required></label><label>分类<select id="photoCategory"><option>学习</option><option>生活</option><option>家务</option><option>纪念日</option><option>其他</option></select></label><label class="full-field">照片故事<textarea id="photoCaption" rows="3" required placeholder="记录这一刻发生了什么……"></textarea></label></div><div class="modal-actions"><button type="button" class="secondary-button" data-close-photo>取消</button><button type="submit" class="primary-button">保存到成长相册</button></div></form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="metricsModal" aria-hidden="true">
+    <div class="modal small-modal" role="dialog" aria-modal="true" aria-labelledby="metricsTitle"><div class="modal-head"><div><p class="eyebrow">首页设置</p><h2 id="metricsTitle">选择要展示的数据</h2></div><button class="modal-close" data-close-metrics aria-label="关闭">×</button></div><div class="metric-toolbar"><p>可以自由选择任意数量，也可以一次展示全部指标。</p><button type="button" class="text-button" id="selectAllMetrics">全选指标</button></div><form id="metricsForm"><div class="metric-options" id="metricOptions"></div><div class="modal-actions"><button type="button" class="secondary-button" data-close-metrics>取消</button><button type="submit" class="primary-button">保存展示设置</button></div></form></div>
+  </div>
+
+  <div class="modal-backdrop" id="quickItemModal" aria-hidden="true">
+    <div class="modal small-modal" role="dialog" aria-modal="true" aria-labelledby="quickItemTitle">
+      <div class="modal-head"><div><p class="eyebrow">快捷记录</p><h2 id="quickItemTitle">添加快捷项</h2></div><button class="modal-close" data-close-quick-item aria-label="关闭">×</button></div>
+      <p>设置后会立即显示在“刚刚完成了什么？”中，点击即可快速录入。</p>
+      <form id="quickItemForm" class="stacked-form"><label>项目名称<input id="quickItemName" required maxlength="20" placeholder="例如：运动、弹琴、早睡"></label><label>项目类型<select id="quickItemKind"><option value="奖励">奖励</option><option value="处罚">处罚</option></select></label><label id="quickItemAccountField">默认扣款账户<select id="quickItemAccount"><option value="pending">未发放金额</option><option value="redpacket">红包钱</option></select><small>点击快捷项目记录处罚时，仍可再次更改扣款账户。</small></label><label>默认金额（元）<input id="quickItemAmount" type="number" min="0" step="0.1" value="2" required></label><label id="quickItemPointsLabel">默认好孩子分<input id="quickItemPoints" type="number" min="0" step="1" value="1" required></label><p class="form-error" id="quickItemError"></p><div class="modal-actions"><button type="button" class="secondary-button" data-close-quick-item>取消</button><button type="submit" class="primary-button" id="saveQuickItemButton">添加到快捷记录</button></div></form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="quickDisplayModal" aria-hidden="true">
+    <div class="modal small-modal" role="dialog" aria-modal="true" aria-labelledby="quickDisplayTitle">
+      <div class="modal-head"><div><p class="eyebrow">首页快捷记录</p><h2 id="quickDisplayTitle">修改显示与顺序</h2></div><button class="modal-close" data-close-quick-display aria-label="关闭">×</button></div>
+      <p class="quick-display-intro">打开或隐藏项目，并用上下按钮调整它们在“刚刚完成了什么？”中的顺序。</p>
+      <div class="quick-display-list" id="quickDisplayList"></div>
+      <div class="modal-actions"><button type="button" class="secondary-button" id="resetQuickDisplay">恢复默认显示</button><button type="button" class="primary-button" data-close-quick-display>完成</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="changePasswordModal" aria-hidden="true">
+    <div class="modal small-modal" role="dialog" aria-modal="true" aria-labelledby="changePasswordTitle">
+      <div class="modal-head"><div><p class="eyebrow">账户安全</p><h2 id="changePasswordTitle">修改登录密码</h2></div><button class="modal-close" data-close-change-password aria-label="关闭">×</button></div>
+      <p class="security-modal-intro">需要先验证当前密码。修改成功后，请使用新密码登录。</p>
+      <form id="changePasswordForm" class="stacked-form">
+        <label>当前密码<input type="password" id="currentAccountPassword" minlength="6" autocomplete="current-password" placeholder="请输入当前登录密码" required></label>
+        <label>新密码<input type="password" id="newAccountPassword" minlength="6" autocomplete="new-password" placeholder="至少 6 位，建议包含数字和字母" required></label>
+        <label>确认新密码<input type="password" id="confirmAccountPassword" minlength="6" autocomplete="new-password" placeholder="请再次输入新密码" required></label>
+        <p class="password-strength" id="passwordStrengthHint">新密码至少 6 位，不能与当前密码相同。</p>
+        <p class="form-error" id="changePasswordError"></p>
+        <div class="modal-actions"><button type="button" class="secondary-button" data-close-change-password>取消</button><button type="submit" class="primary-button" id="saveNewPasswordButton">确认修改</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop mobile-more-backdrop" id="mobileMoreModal" aria-hidden="true">
+    <div class="modal small-modal mobile-more-modal" role="dialog" aria-modal="true" aria-labelledby="mobileMoreTitle">
+      <div class="modal-head"><div><p class="eyebrow">全部功能</p><h2 id="mobileMoreTitle">更多</h2></div><button class="modal-close" data-close-mobile-more aria-label="关闭">×</button></div>
+      <div class="mobile-more-grid"><button type="button" data-mobile-destination="gallery"><span>▧</span><strong>成长相册</strong></button><button type="button" data-mobile-destination="circle"><span>◉</span><strong>孩子圈</strong></button><button type="button" data-mobile-destination="analytics"><span>⌇</span><strong>数据分析</strong></button><button type="button" data-mobile-destination="settings"><span>⚙</span><strong>家庭设置</strong></button><button type="button" id="mobileDonateButton"><span>♡</span><strong>打赏作者</strong></button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="redpacketModal" aria-hidden="true">
+    <div class="modal small-modal" role="dialog" aria-modal="true" aria-labelledby="redpacketModalTitle">
+      <div class="modal-head"><div><p class="eyebrow">账户与结算</p><h2 id="redpacketModalTitle">更改红包</h2></div><button class="modal-close" data-close-redpacket aria-label="关闭">×</button></div>
+      <p id="redpacketCurrent">可直接输入调整后的红包金额，也可以输入负数。</p>
+      <form id="redpacketForm" class="stacked-form">
+        <label>调整后的金额（元）<input id="redpacketAmount" type="number" step="0.1" required></label>
+        <p class="form-error" id="redpacketError"></p>
+        <div class="modal-actions"><button type="button" class="secondary-button" data-close-redpacket>取消</button><button type="submit" class="primary-button">保存金额</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="photoViewerModal" aria-hidden="true">
+    <div class="modal photo-viewer-modal" role="dialog" aria-modal="true" aria-labelledby="photoViewerTitle">
+      <div class="modal-head"><div><p class="eyebrow">成长相册</p><h2 id="photoViewerTitle">查看照片</h2></div><button class="modal-close" data-close-photo-viewer aria-label="关闭">×</button></div>
+      <img id="photoViewerImage" alt="成长照片大图">
+      <p id="photoViewerCaption"></p>
+      <div class="modal-actions"><button type="button" class="secondary-button" data-close-photo-viewer>关闭</button><a class="primary-button" id="photoViewerDownload" download>下载原图</a></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="notificationModal" aria-hidden="true">
+    <div class="modal small-modal notification-modal" role="dialog" aria-modal="true" aria-labelledby="notificationTitle">
+      <div class="modal-head"><div><p class="eyebrow">家庭消息</p><h2 id="notificationTitle">消息提醒</h2></div><button class="modal-close" data-close-notification aria-label="关闭">×</button></div>
+      <p class="notification-summary" id="notificationSummary">正在整理今天的提醒……</p>
+      <div class="notification-list" id="notificationList"></div>
+      <p class="notification-permission" id="notificationPermissionStatus"></p>
+      <div class="modal-actions"><button type="button" class="secondary-button" id="enableBrowserNotifications">开启系统提醒</button><button type="button" class="primary-button" data-close-notification>关闭</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="familySwitcherModal" aria-hidden="true">
+    <div class="modal small-modal family-switcher-modal" role="dialog" aria-modal="true" aria-labelledby="familySwitcherTitle">
+      <div class="modal-head"><div><p class="eyebrow">共同管理</p><h2 id="familySwitcherTitle">切换家庭</h2></div><button class="modal-close" data-close-family-switcher aria-label="关闭">×</button></div>
+      <p class="family-switcher-intro">一个已注册家长可以保留自己的家庭，同时进入受邀共同管理的家庭。每个家庭的数据相互独立。</p>
+      <div class="family-context-list" id="familyContextList"></div>
+      <p class="form-error" id="familySwitcherError"></p>
+      <div class="modal-actions"><button type="button" class="primary-button" data-close-family-switcher>完成</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="donateModal" aria-hidden="true">
+    <div class="modal donate-modal" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
+      <div class="modal-head"><div><p class="eyebrow" id="donateEyebrow">感谢支持</p><h2 id="donateTitle">打赏作者</h2><p id="donateIntro">如果小树苗对您有帮助，可以使用微信或支付宝扫码打赏作者。</p></div><button class="modal-close" data-close-donate aria-label="关闭">×</button></div>
+      <p class="donate-public-note">感谢支持。公开版本不内置个人收款码，部署者可自行配置适合自己的打赏方式。</p>
+      <div class="gallery-upgrade-action hidden" id="galleryUpgradeAction">
+        <strong>选择成长相册空间</strong><p>扫码支付对应金额后，填写支付订单号最后六位提交审核。</p>
+        <form class="recharge-form" id="galleryRechargeForm">
+          <div class="recharge-plans">
+            <label><input type="radio" name="galleryRechargePlan" value="5gb" checked><span><strong>5GB空间</strong><b>¥19.9</b><small>不限照片条数</small></span></label>
+            <label><input type="radio" name="galleryRechargePlan" value="10gb"><span><strong>10GB空间</strong><b>¥29.9</b><small>不限照片条数</small></span></label>
+          </div>
+          <label>支付方式<select id="galleryRechargeMethod" required><option value="wechat">微信支付</option><option value="alipay">支付宝</option></select></label>
+          <label>支付订单号后六位<input id="galleryRechargeReference" required minlength="6" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" autocomplete="off" placeholder="例如：386521"></label>
+          <button class="primary-button full" id="submitGalleryRecharge" type="submit">提交19.9元充值申请</button>
+        </form>
+        <div class="recharge-status hidden" id="galleryRechargeStatus"></div>
+        <small>提交后不会立刻解锁；管理员核对实际到账金额和订单号后，才会开通相册空间。</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="childSetupModal" aria-hidden="true">
+    <div class="modal small-modal child-setup-modal" role="dialog" aria-modal="true" aria-labelledby="childSetupTitle">
+      <div class="modal-head"><div><p class="eyebrow">建立成长档案</p><h2 id="childSetupTitle">创建第一个孩子</h2></div><button class="modal-close" id="closeChildSetup" type="button" aria-label="关闭">×</button></div>
+      <p class="child-setup-intro" id="childSetupIntro">先填写孩子的姓名，其他资料可以以后补充。</p>
+      <form id="childSetupForm" class="child-setup-form">
+        <div class="child-avatar-editor">
+          <button type="button" id="childSetupAvatarButton" aria-label="选择孩子头像"><span id="childSetupAvatarPreview">孩</span><i>选择头像</i></button>
+          <input type="file" id="childSetupAvatarFile" accept="image/jpeg,image/png,image/webp" hidden>
+          <button type="button" class="text-button" id="removeChildAvatar">移除头像</button>
+          <p>支持 JPG、PNG、WebP，保存后会显示在孩子切换和对比卡片中。</p>
+        </div>
+        <label>孩子姓名（必填）<input id="childSetupName" required maxlength="20" autocomplete="off" placeholder="例如：小满"></label>
+        <label>年级（选填）<select id="childSetupGrade"><option value="">暂不填写</option><option>幼儿园</option><option>一年级</option><option>二年级</option><option>三年级</option><option>四年级</option><option>五年级</option><option>六年级</option><option>初一</option><option>初二</option><option>初三</option><option>高中</option></select></label>
+        <label>生日（选填）<input id="childSetupBirthday" type="date"></label>
+        <p class="form-error" id="childSetupError"></p>
+        <div class="modal-actions"><button type="button" class="secondary-button" id="cancelChildSetup">稍后再说</button><button type="submit" class="primary-button" id="saveChildProfileButton">创建成长档案</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="inviteParentModal" aria-hidden="true">
+    <div class="modal small-modal invite-parent-modal" role="dialog" aria-modal="true" aria-labelledby="inviteParentTitle">
+      <div class="modal-head"><div><p class="eyebrow">共同管理家庭</p><h2 id="inviteParentTitle">邀请另一位家长</h2></div><button class="modal-close" data-close-invite-parent type="button" aria-label="关闭">×</button></div>
+      <p class="invite-parent-intro">填写对方注册或准备注册的邮箱，生成专属邀请链接，再通过微信等方式发给对方。链接 7 天内有效。</p>
+      <form id="inviteParentForm" class="invite-parent-form">
+        <label>被邀请家长的邮箱<input id="inviteParentEmail" type="email" required autocomplete="email" placeholder="parent@example.com"></label>
+        <p class="form-error" id="inviteParentError"></p>
+        <button class="primary-button full" type="submit" id="createParentInvite">生成邀请链接</button>
+      </form>
+      <div class="invite-result hidden" id="inviteParentResult">
+        <label>专属邀请链接<input id="inviteParentLink" readonly></label>
+        <div class="modal-actions"><button class="secondary-button" type="button" id="copyParentInvite">复制邀请链接</button><button class="primary-button" type="button" id="shareParentInvite">分享给家长</button></div>
+        <small>对方须使用上面填写的邮箱注册或登录，才能加入这个家庭。</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="bookReaderModal" aria-hidden="true">
+    <div class="modal book-reader-modal" role="dialog" aria-modal="true" aria-labelledby="bookReaderTitle">
+      <div class="modal-head"><div><p class="eyebrow" id="bookReaderEdition">公版原著全文</p><h2 id="bookReaderTitle">《西游记》</h2></div><button class="modal-close" data-close-book-reader type="button" aria-label="关闭阅读器">×</button></div>
+      <div class="book-reader-toolbar"><label>选择章节<select id="bookChapterSelect"></select></label><button class="secondary-button" type="button" id="speakBookChapter">朗读本章</button></div>
+      <article class="book-reader-content" id="bookReaderContent"></article>
+      <div class="book-reader-footer"><button class="secondary-button" type="button" id="previousBookChapter">上一章</button><button class="primary-button" type="button" id="startReadingFromBook">开始阅读并计时</button><button class="secondary-button" type="button" id="nextBookChapter">下一章</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="forgotModal" aria-hidden="true">
+    <div class="modal small-modal" role="dialog" aria-modal="true" aria-labelledby="forgotTitle"><div class="modal-head"><div><p class="eyebrow">账号安全</p><h2 id="forgotTitle">通过邮箱找回密码</h2></div><button class="modal-close" data-close-forgot aria-label="关闭">×</button></div><form id="forgotForm"><div id="forgotEmailStep"><label>注册邮箱<input type="email" id="forgotEmail" required placeholder="name@example.com"></label><p>我们会向该邮箱发送验证码。</p><button class="primary-button full" type="submit">发送验证码</button></div><div class="hidden" id="forgotResetStep"><label>邮箱验证码<input id="forgotCode" inputmode="numeric" autocomplete="one-time-code" minlength="6" maxlength="6" placeholder="输入邮件中的 6 位验证码"></label><label>设置新密码<input type="password" id="forgotNewPassword" minlength="6" placeholder="至少 6 位"></label><button class="primary-button full" type="button" id="resetPasswordButton">验证并设置新密码</button></div><p class="form-error" id="forgotError"></p></form></div>
+  </div>
+
+  <div class="modal-backdrop" id="legalModal" aria-hidden="true">
+    <div class="modal legal-modal" role="dialog" aria-modal="true" aria-labelledby="legalTitle"><div class="modal-head"><div><p class="eyebrow">小树苗家庭成长账本</p><h2 id="legalTitle">用户协议</h2></div><button class="modal-close" data-close-legal aria-label="关闭">×</button></div><div class="legal-content" id="legalContent"></div><div class="modal-actions"><button type="button" class="primary-button" data-close-legal>我已阅读</button></div></div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js?v=20"></script>
+  <script src="app.js?v=44"></script>
+</body>
+</html>
